@@ -1,11 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Weather App</title>
 </head>
-<body>
+
+  <style>
+
+    :root {
+      --max-width: 1100px;
+      --light: #f0f8ff;
+      --muted: rgba(240, 248, 255, 0.6);
+      --card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.1);
+}
+  </style>
+
     
+
+
+
+<body class="h-full text-[var(--light)] bg-black flex justify-center align-center flex-col">
+
+  <!-- Loading  -->
+
+
+  <div id="loading" class="hidden flex flex-col items-center gap-4 py-20">
+    <div class="h-10 w-10 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+    <p class="text-sm tracking-wide">Fetching weather…</p>
+  </div>
+
+  <!-- App  -->
+
+  <main id="app" class="relative z-10 flex-1 overflow-y-auto px-6 py-10 lg:px-10 lg:py-12">
+
+    <header class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 pb-8 border-b border-white/10">
+
+      <div class="text-center md:text-left">
+        <h1 class="text-4xl font-extrabold tracking-tight" style="color: var(--accent);">Weather Page</h1>
+        <p class="text-sm opacity-60" style="color: var(--light);">View weather of any place</p>
+      </div>
+
+      <div class="flex gap-3 items-center">
+        <input id="q" type="search" placeholder="Enter City Name" class="flex-1 w-40 sm:w-64 px-5 py-3 rounded-xl bg-black/40 border border-white/10 text-[var(--light)] focus:border-[var(--accent)] transition-all" />
+        <button id="btnSearch" class="px-3 py-3 rounded-xl bg-[var(--accent)] text-[var(--light)] font-bold shadow-lg hover:brightness-110 hover:-translate-y-1 active:translate-y-0 transition-all">SEARCH</button>
+      </div>
+
+    </header>
+
+
+
+
+
+    <section id="core-display" class="grid grid-cols-2 gap-15 pb-12 w-[800px] mx-auto border-b border-[var(--border)]">
+      <div id="place-temp" class="flex flex-col align-start pl-50">
+       
+        <div>
+          <div id="place" class="text-6xl font-bold mb-5"></div>
+          <div id="desc" class="text-2xl text-[var(--accent)] font-semibold"></div>
+
+          <div class="flex items-center gap-5 mt-6">
+           
+            <div class="group cursor-default transition-all duration-500 hover:scale-105">
+              <div class="text-9xl font-extrabold text-[var(--light)]">
+                <span id="temp"></span><span class="text-5xl font-bold opacity-50">°C</span>
+              </div>
+            </div>
+           
+            <div id="circle"
+              class="w-[9.5rem] h-[9.5rem] rounded-full bg-white/5 border-2 flex items-center justify-center shadow-[0_0_40px_rgba(0,0,0,0.3)] relative">
+              <div class="absolute inset-0 rounded-full blur-2xl bg-[var(--accent)] opacity-10"></div>
+              <img id="icon" class="w-full h-full object-contain drop-shadow-2xl hidden relative z-10"
+                alt="Weather icon" />
+           </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div id="light-card" class="grid grid-cols-1 rounded-2xl border border-white/10 bg-[var(--card)] w-[23rem] mx-auto">
+        
+        <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
+          <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+          <span class="text-sm opacity-60">Feels Like</span>
+          <span id="feels" class="text-lg font-bold"></span>
+        </div>
+        <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
+          <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+          <span class="text-sm opacity-60">Wind Speed</span>
+          <span id="wind" class="text-lg font-bold"></span>
+        </div>
+        <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
+          <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+          <span class="text-sm opacity-60">Humidity</span>
+          <span id="humidity" class="text-lg font-bold"></span>
+        </div>
+        <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
+          <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+          <span class="text-sm opacity-60">Pressure</span>
+          <span id="pressure" class="text-lg font-bold"></span>
+        </div>
+        <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
+          <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+          <span class="text-sm opacity-60">visibility</span>
+          <span id="visibility" class="text-lg font-bold"></span>
+        </div>
+        <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
+          <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+          <span class="text-sm opacity-60">Cloud Cover</span>
+          <span id="clouds" class="text-lg font-bold"></span>
+        </div>
+
+      </div>
+    </section>
+
+
+
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 mt-6">      
+      
+      <section id="dark-card" class="p-8 bg-black/40 rounded-2xl border border-white/10 hover:bg-[#1c1a1a] duration-500">
+        <span class="block font-extrabold text-[var(--accent)] mb-6 text-sm tracking-widest">DETAILED FEED</span>
+        <div class="space-y-4">
+          
+          <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
+            <span class="opacity-50 text-sm">Observed Time</span>
+            <span id="observed" class="font-semibold group-hover:text-[var(--accent)]"></span>
+          </div>
+          
+          <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
+            <span class="opacity-50 text-sm">Min / Max</span>
+            <span id="minmax" class="font-semibold group-hover:text-[var(--accent)]"></span>
+          </div>
+          
+          <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
+            <span class="opacity-50 text-sm">Sunrise</span>
+            <span id="sunrise" class="font-semibold group-hover:text-[var(--accent)]"></span>
+          </div>
+          
+          <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
+            <span class="opacity-50 text-sm">Sunset</span>
+            <span id="sunset" class="font-semibold group-hover:text-[var(--accent)]"></span>
+          </div>
+          
+          <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
+            <span class="opacity-50 text-sm">Coordinates</span>
+            <span id="cpprds" class="font-semibold group-hover:text-[var(--accent)]"></span>
+          </div>
+          
+          <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
+            <span class="opacity-50 text-sm">Precipitation (1h)</span>
+            <span id="precip" class="font-semibold group-hover:text-[var(--accent)]"></span>
+          </div>
+         
+        </div>
+      </section>
+
+
+
+      <section class="flex flex-col">
+                <span class="block font-extrabold text-[var(--accent)] mb-6 text-sm tracking-widest uppercase">5-Day Atmosphere
+          Prediction</span>
+        <div id="forecast" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+      </div>
+      </section>
+
+
+    </div>
+</main>
+
+
+
+
+  
 </body>
 </html>
