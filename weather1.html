@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Weather App</title>
-</head>
 
-  <style>
+<style>
 
     :root {
       --max-width: 1100px;
@@ -15,26 +14,80 @@
       --muted: rgba(240, 248, 255, 0.6);
       --card: rgba(255, 255, 255, 0.03);
       --border: rgba(255, 255, 255, 0.1);
-}
-  </style>
+    }
 
+
+
+/* Themes  */
+    body.theme-clear {
+      --accent: #d1cf39;
+      --bg-image: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(30, 58, 138, 0.3)), url('images/clear.jpg');
+    }
+    body.theme-rain {
+      --accent: #60a5fa;
+      --bg-image: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(30, 58, 138, 0.3)), url('images/rain.jpg');
+    }
+    body.theme-snow {
+      --accent: #7dd3fc;
+      --bg-image: linear-gradient(135deg, rgba(125, 211, 252, 0.15), rgba(186, 230, 253, 0.1)), url('images/snow.jpg');
+    }
+    body.theme-fog {
+      --accent: #dfe4ec;
+      --bg-image: linear-gradient(135deg, rgba(209, 213, 219, 0.15), rgba(107, 114, 128, 0.25)), url('https://images.unsplash.com/photo-1487621167305-5d248087c724?q=80&w=1920');
+    }
+    body.theme-clouds {
+      --accent: #94a3b8;
+      --bg-image: linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(71, 85, 105, 0.2)), url('images/clouds.jpg');
+}
+
+    
+/* element  */
+    #theme-bg {
+      position: fixed;
+      inset: 0;
+      background-repeat: no-repeat;
+      filter: grayscale(10%) brightness(75%);
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      z-index: 0;
+}
+
+/* activation  */
     
 
 
+    body.theme-clear #theme-bg,
+    body.theme-rain #theme-bg,
+    body.theme-snow #theme-bg,
+    body.theme-fog #theme-bg,
+    body.theme-clouds #theme-bg {
+      background: var(--bg-image);
+      opacity: 1;
+      background-position: center;
+}
 
-<body class="h-full text-[var(--light)] bg-black flex justify-center align-center flex-col">
+</style>
 
-  <!-- Loading  -->
+</head>    
+    
+
+<body class="h-full text-[var(--light)] bg-black flex justify-center flex-col">
 
 
-  <div id="loading" class="hidden flex flex-col items-center gap-4 py-20">
+  <div id="theme-bg"></div>
+
+  <!-- loading  -->
+
+
+  <div id="loading" class="flex flex-col h-[100vh] items-center justify-center gap-4 py-20">
     <div class="h-10 w-10 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
     <p class="text-sm tracking-wide">Fetching weather…</p>
   </div>
 
-  <!-- App  -->
+  <!-- app -->
 
-  <main id="app" class="relative z-10 flex-1 overflow-y-auto px-6 py-10 lg:px-10 lg:py-12">
+
+  <main id="app" class="hidden relative z-10 flex-1 overflow-y-auto px-6 py-10 lg:px-10 lg:py-12">
 
     <header class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 pb-8 border-b border-white/10">
 
@@ -50,8 +103,7 @@
 
     </header>
 
-
-
+  
 
 
     <section id="core-display" class="grid grid-cols-2 gap-15 pb-12 w-[800px] mx-auto border-b border-[var(--border)]">
@@ -107,7 +159,7 @@
         </div>
         <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
           <div class="absolute left-0 top-0 h-full w-1 bg-[var(--accent)] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
-          <span class="text-sm opacity-60">visibility</span>
+          <span class="text-sm opacity-60">Visibility</span>
           <span id="visibility" class="text-lg font-bold"></span>
         </div>
         <div class="group relative flex justify-between items-center px-4 py-3 border-b border-white/5 hover:bg-white/5 hover:translate-x-1 transition-all">
@@ -117,8 +169,9 @@
         </div>
 
       </div>
-    </section>
 
+
+          </section>
 
 
 
@@ -132,39 +185,36 @@
             <span class="opacity-50 text-sm">Observed Time</span>
             <span id="observed" class="font-semibold group-hover:text-[var(--accent)]"></span>
           </div>
-          
           <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
             <span class="opacity-50 text-sm">Min / Max</span>
             <span id="minmax" class="font-semibold group-hover:text-[var(--accent)]"></span>
           </div>
-          
           <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
             <span class="opacity-50 text-sm">Sunrise</span>
             <span id="sunrise" class="font-semibold group-hover:text-[var(--accent)]"></span>
           </div>
-          
           <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
             <span class="opacity-50 text-sm">Sunset</span>
             <span id="sunset" class="font-semibold group-hover:text-[var(--accent)]"></span>
           </div>
-          
           <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
             <span class="opacity-50 text-sm">Coordinates</span>
-            <span id="cpprds" class="font-semibold group-hover:text-[var(--accent)]"></span>
+            <span id="coords" class="font-semibold group-hover:text-[var(--accent)]"></span>
           </div>
-          
           <div class="flex justify-between py-2 border-b border-dashed border-white/10 hover:pl-2 transition-all group">
-            <span class="opacity-50 text-sm">Precipitation (1h)</span>
+            <span class="opacity-50 text-sm">Precipitaion (1h)</span>
             <span id="precip" class="font-semibold group-hover:text-[var(--accent)]"></span>
           </div>
+          
          
         </div>
       </section>
 
+ 
 
 
       <section class="flex flex-col">
-                <span class="block font-extrabold text-[var(--accent)] mb-6 text-sm tracking-widest uppercase">5-Day Atmosphere
+        <span class="block font-extrabold text-[var(--accent)] mb-6 text-sm tracking-widest uppercase">5-Day Atmosphere
           Prediction</span>
         <div id="forecast" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
       </div>
@@ -175,8 +225,189 @@
 </main>
 
 
+<script>
+  // default city 
+init();
+async function init() {
+  loadCity('Brisbane'); 
+}
 
 
-  
+
+// core function 
+async function loadCity(cityName) {
+
+  // clearing themes 
+    document.body.classList.remove(
+      'theme-clear',
+      'theme-rain',
+      'theme-snow',
+      'theme-fog',
+      'theme-clouds'
+    );
+
+    // Removing hidden class from the loading and adding to app 
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('app').classList.add('hidden');
+
+    // fetching city & rendering 
+    const data = await fetchWeather(cityName);
+    renderWeather(data);
+
+    // fetching the forecast & rendering it 
+    const forecastData = await fetchForecast(cityName);
+    if (forecastData) renderForecast(forecastData.list);
+
+    // Set weather icon
+    const icon = document.getElementById('icon');
+    icon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    icon.style.display = 'block';
+
+
+  // Logic for the weather theme selection 
+    const weather = data.weather[0].main.toLowerCase();
+    let theme = '';
+
+    if (weather.includes('clear')) theme = 'theme-clear';
+    else if (weather.includes('rain') || weather.includes('drizzle')) theme = 'theme-rain';
+    else if (weather.includes('snow')) theme = 'theme-snow';
+    else if (weather.includes('fog') || weather.includes('mist') || weather.includes('haze')) theme = 'theme-fog';
+    else if (weather.includes('cloud')) theme = 'theme-clouds';
+    document.body.classList.add(theme);
+
+
+    // remove the hidden class from the app and add hidden to the loading 
+    document.getElementById('loading').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+
+}
+
+
+
+
+
+
+// fetching weather 
+async function fetchWeather(city) {
+  const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=9ba95a597475d04073c505b3460c12ce`);
+
+  if (!res.ok) {
+    throw new Error('Weather fetch failed');
+  }
+
+  return res.json();
+}
+
+
+// redering weather data 
+function renderWeather(data) {
+  document.getElementById('place').textContent = data.name;
+  document.getElementById('desc').textContent = data.weather[0].description.toUpperCase();
+
+  document.getElementById('temp').textContent = Math.round(data.main.temp);
+  document.getElementById('feels').textContent = Math.round(data.main.feels_like) + '°C';
+
+  document.getElementById('wind').textContent = Math.round(data.wind.speed) + ' m/s';
+  document.getElementById('humidity').textContent = data.main.humidity + '%';
+  document.getElementById('pressure').textContent = data.main.pressure + ' hPa';
+
+  document.getElementById('visibility').textContent =
+    (data.visibility / 1000).toFixed(1) + ' km';
+
+  document.getElementById('clouds').textContent = data.clouds.all + '%';
+
+  document.getElementById('minmax').textContent =
+    Math.round(data.main.temp_min) + '° / ' +
+    Math.round(data.main.temp_max) + '°';
+
+  document.getElementById('coords').textContent =
+    data.coord.lat + ', ' + data.coord.lon;
+
+  document.getElementById('observed').textContent =
+    new Date(data.dt * 1000).toLocaleTimeString();
+
+  document.getElementById('sunrise').textContent =
+    new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+
+  document.getElementById('sunset').textContent =
+    new Date(data.sys.sunset * 1000).toLocaleTimeString();
+
+  document.getElementById('precip').textContent =
+    data.rain && data.rain['1h'] ? data.rain['1h'] + ' mm' : '0 mm';
+}
+
+
+
+
+
+// fetching forecast 
+async function fetchForecast(city) {
+  const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=9ba95a597475d04073c505b3460c12ce`);
+
+  if (!res.ok) {
+    throw new Error('Forecast fetch failed');
+  }
+
+  return res.json();
+}
+
+
+
+
+
+
+// rendering forecast 
+function renderForecast(list) {
+  const container = document.getElementById('forecast');
+  container.innerHTML = '';
+
+  const daily = list.filter(item =>
+    item.dt_txt.includes('12:00:00')
+  );
+
+  daily.forEach(d => {
+    const w = d.weather[0];
+    const date = new Date(d.dt * 1000);
+
+    const card = document.createElement('div');
+    card.className =
+      'transition-transform duration-200 hover:scale-110 relative p-4 rounded-xl bg-[var(--card)] border border-white/10 min-w-[120px] text-center';
+
+    card.innerHTML = `
+      <div class="text-sm font-bold opacity-70 mb-2">
+        ${date.toLocaleDateString(undefined, { weekday: 'short' }).toUpperCase()}
+      </div>
+
+      <img
+        class="mx-auto w-14 h-14"
+        src="https://openweathermap.org/img/wn/${w.icon}@2x.png"
+        alt="${w.description || ''}"
+        loading="lazy"
+      />
+
+      <div class="text-xl font-extrabold mt-2">
+        ${Math.round(d.main.temp)}°C
+      </div>
+
+      <div class="text-xs opacity-60 mt-1">
+        ${(w.description || 'N/A').toUpperCase()}
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+
+// search 
+document.getElementById('btnSearch').onclick = () => {
+  const city = document.getElementById('q').value.trim();
+  if (city) loadCity(city);
+};
+
+
+
+</script>
+
 </body>
 </html>
