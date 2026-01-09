@@ -66,6 +66,49 @@
       background-position: center;
 }
 
+
+
+/* Responsiveness  */
+@media(max-width:900px) {
+      #core-display {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        width: 80%;
+        margin: auto
+      }
+
+      #place-temp {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    @media(max-width:600px) {
+      #place {
+        font-size: 2.2rem;
+      }
+
+      #temp {
+        font-size: 5rem;
+      }
+
+      #circle {
+        height: 7rem;
+        width: 7rem
+      }
+
+      #light-card {
+        width: 99%;
+      }
+
+    }
+
+    @media(max-width:500px) {
+      #core-display {
+        width: auto;
+      }
+    }
 </style>
 
 </head>    
